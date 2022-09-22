@@ -70,4 +70,33 @@ class Member:
     def get_paternal_aunt(self):
         grandmother = self.get_paternal_grandmother()
         if not grandmother:
-            return None
+            return []
+
+        aunt = filter(
+            lambda child: child.gender == Gender.female, 
+            grandmother.children)
+
+        return list(aunt)
+
+    def get_paternal_uncle(self):
+        grandmother = self.get_paternal_grandmother()
+        if not grandmother:
+            return []
+
+        uncle = filter(
+            lambda child: child.gender == Gender.male and self.father != child, 
+            grandmother.children)
+        return list(uncle)       
+
+    def __eq__(self, other) -> bool:
+        if isinstance(self, other.__class__):
+            return (
+                self.id == other.id and 
+                self.name == other.name and
+                self.gender == other.gender and
+                self.mother == other.mother and
+                self.father == other.father and
+                self.spouse == other.spouse and 
+                self.children == other.children
+                )
+        return False
