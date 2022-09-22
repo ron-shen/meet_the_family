@@ -48,3 +48,26 @@ class Member:
             raise ValueError("spouse must be a Member object")
 
         self.children.append(child)
+
+    def get_paternal_grandmother(self):
+        if not self.father or not self.father.mother:
+            return None
+
+        return self.father.mother
+
+    def get_maternal_grandmother(self):
+        if not self.mother or not self.mother.mother:
+            return None
+
+        return self.mother.mother
+
+    def get_spouse_mother(self):
+        if not self.spouse or not self.spouse.mother:
+            return None
+
+        return self.spouse.mother
+
+    def get_paternal_aunt(self):
+        grandmother = self.get_paternal_grandmother()
+        if not grandmother:
+            return None
