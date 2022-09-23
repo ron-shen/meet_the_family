@@ -171,11 +171,130 @@ class TestMember:
             ])
         ])
         
-        #check for None value
         assert member.get_paternal_uncle() == []
         assert member.get_paternal_uncle() == []
         assert member.get_paternal_uncle() == []
         assert member.get_paternal_uncle() == [Member(4, "Uncle", "Male")]
+
+    def test_get_maternal_aunt(self, member, mocker):
+        member.mother = Member(3, "Mother", "Female")
+        mocker.patch("family.member.Member.get_maternal_grandmother", side_effect=[
+            None,
+            create_fake_member(children=[Member(3, "Mother", "Female")]),
+            create_fake_member(children=[
+                Member(3, "Mother", "Female"), 
+                Member(4, "Uncle", "Male")
+            ]),
+            create_fake_member(children=[
+                Member(3, "Mother", "Female"), 
+                Member(4, "Uncle", "Male"), 
+                Member(5, "Aunt", "Female")
+            ])
+        ])
+        assert member.get_maternal_aunt() == []
+        assert member.get_maternal_aunt() == []
+        assert member.get_maternal_aunt() == []
+        assert member.get_maternal_aunt() == [Member(5, "Aunt", "Female")]
+
+    def test_get_maternal_uncle(self, member, mocker):
+        mocker.patch("family.member.Member.get_maternal_grandmother", side_effect=[
+            None,
+            create_fake_member(children=[Member(3, "Mother", "Female")]),
+            create_fake_member(children=[
+                Member(3, "Mother", "Female"),
+                Member(5, "Aunt", "Female")
+            ]),
+            create_fake_member(children=[
+                Member(3, "Mother", "Female"), 
+                Member(5, "Aunt", "Female"),
+                Member(4, "Uncle", "Male")
+            ])
+        ])
+        assert member.get_maternal_uncle() == []
+        assert member.get_maternal_uncle() == []
+        assert member.get_maternal_uncle() == []
+        assert member.get_maternal_uncle() == [Member(4, "Uncle", "Male")]
+
+    def test_get_brother_in_law(self, mocker, member):
+        member.spouse = Member(3, "Spouse", "Female")
+        mocker.patch("family.member.Member.get_spouse_mother", side_effect=[
+            None,
+            create_fake_member(children=[Member(3, "Spouse", "Female")]),
+            create_fake_member(children=[
+                Member(3, "Spouse", "Female"),
+                Member(5, "Sister-in-law", "Female")
+            ]),
+            create_fake_member(children=[
+                Member(3, "Spouse", "Female"),
+                Member(5, "Sister-in-law", "Female"),
+                Member(4, "Brother-in-law", "Male")
+            ])
+        ])
+        assert member.get_brother_in_law() == []
+        assert member.get_brother_in_law() == []
+        assert member.get_brother_in_law() == []
+        assert member.get_brother_in_law() == [Member(4, "Brother-in-law", "Male")]
+
+    def test_get_sister_in_law(self, mocker, member):
+        member.spouse = Member(3, "Spouse", "Female")
+        mocker.patch("family.member.Member.get_spouse_mother", side_effect=[
+            None,
+            create_fake_member(children=[Member(3, "Spouse", "Female")]),
+            create_fake_member(children=[
+                Member(3, "Spouse", "Female"),
+                Member(4, "Brother-in-law", "Male")
+            ]),
+            create_fake_member(children=[
+                Member(3, "Spouse", "Female"),
+                Member(4, "Brother-in-law", "Male"),
+                Member(5, "Sister-in-law", "Female")
+            ])
+        ])
+        assert member.get_sister_in_law() == []
+        assert member.get_sister_in_law() == []
+        assert member.get_sister_in_law() == []
+        assert member.get_sister_in_law() == [Member(5, "Sister-in-law", "Female")]
+
+    def test_get_son(self):
+        member = Member(5, "Dummy", "Male")
+        son = Member(6, "Son", "Male")
+        daugther = Member(7, "Daugther", "Female")
+
+        assert member.get_son() == []
+        member.children.append(daugther)
+        assert member.get_son() == []
+        member.children.append(son)
+        assert member.get_son() == [son]
+
+    def test_get_daughter(self):
+        member = Member(5, "Dummy", "Male")
+        son = Member(6, "Son", "Male")
+        daugther = Member(7, "Daugther", "Female")
+
+        assert member.get_daughter() == []
+        member.children.append(son)
+        assert member.get_daughter() == []
+        member.children.append(daugther)
+        assert member.get_daughter() == [daugther]
+
+    def test_get_siblings(self):
+        member = Member(5, "Dummy", "Male")
+        mother = Member(9, "Mother", "Female")
+        son = Member(6, "Son", "Male")
+        daugther = Member(7, "Daugther", "Female")
+
+        assert member.get_siblings() == []
+        member.mother = mother
+        assert member.get_siblings() == []
+        member.mother.children.append(member)
+        assert member.get_siblings() == []
+        member.mother.children.append(son)
+        member.mother.children.append(daugther)
+        assert member.get_siblings() == [son, daugther]
+
+
+
+
 
 
 

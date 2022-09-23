@@ -88,6 +88,70 @@ class Member:
             grandmother.children)
         return list(uncle)       
 
+    def get_maternal_aunt(self):
+        grandmother = self.get_maternal_grandmother()
+        if not grandmother:
+            return []
+
+        aunt = filter(
+            lambda child: child.gender == Gender.female and self.mother != child, 
+            grandmother.children)
+        return list(aunt)  
+
+    def get_maternal_uncle(self):
+        grandmother = self.get_maternal_grandmother()
+        if not grandmother:
+            return []
+
+        uncle = filter(
+            lambda child: child.gender == Gender.male, 
+            grandmother.children)
+
+        return list(uncle)
+
+    def get_brother_in_law(self):
+        spouse_mother = self.get_spouse_mother()
+        if not spouse_mother:
+            return []
+
+        brother_in_law = filter(
+            lambda child: child.gender == Gender.male and self.spouse != child, 
+            spouse_mother.children)
+
+        return list(brother_in_law)
+
+    def get_sister_in_law(self):
+        spouse_mother = self.get_spouse_mother()
+        if not spouse_mother:
+            return []
+
+        sister_in_law = filter(
+            lambda child: child.gender == Gender.female and self.spouse != child, 
+            spouse_mother.children)
+
+        return list(sister_in_law)
+
+    def get_son(self):
+        if not self.children:
+            return []
+
+        son = filter(lambda child: child.gender == Gender.male, self.children)
+        return list(son)
+
+    def get_daughter(self):
+        if not self.children:
+            return []
+
+        daugther = filter(lambda child: child.gender == Gender.female, self.children)
+        return list(daugther)
+
+    def get_siblings(self):
+        if not self.mother or not self.mother.children:
+            return []
+
+        siblings = filter(lambda child: child != self, self.mother.children)
+        return list(siblings)
+
     def __eq__(self, other) -> bool:
         if isinstance(self, other.__class__):
             return (
