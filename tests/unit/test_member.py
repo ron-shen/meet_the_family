@@ -1,6 +1,5 @@
 import pytest
-from family.member import Member
-from family.member import Gender
+from family.member import Member, Gender
 from unittest.mock import Mock
 
 
@@ -291,6 +290,48 @@ class TestMember:
         member.mother.children.append(son)
         member.mother.children.append(daugther)
         assert member.get_siblings() == [son, daugther]
+
+    def test_get_relationship(self, mocker, member):
+        with pytest.raises(ValueError):
+            member.get_relationship("invalid_relationship")
+
+        mock = mocker.patch("family.member.Member.get_paternal_aunt")
+        member.get_relationship("paternal_aunt")
+        mock.assert_called_with()
+
+        mock = mocker.patch("family.member.Member.get_paternal_uncle")
+        member.get_relationship("paternal_uncle")
+        mock.assert_called_with()
+
+        mock = mocker.patch("family.member.Member.get_maternal_aunt")
+        member.get_relationship("maternal_aunt")
+        mock.assert_called_with()
+
+        mock = mocker.patch("family.member.Member.get_maternal_uncle")
+        member.get_relationship("maternal_uncle")
+        mock.assert_called_with()
+
+        mock = mocker.patch("family.member.Member.get_brother_in_law")
+        member.get_relationship("brother_in_law")
+        mock.assert_called_with()
+
+        mock = mocker.patch("family.member.Member.get_sister_in_law")
+        member.get_relationship("sister_in_law")
+        mock.assert_called_with()
+
+        mock = mocker.patch("family.member.Member.get_son")
+        member.get_relationship("son")
+        mock.assert_called_with()
+
+        mock = mocker.patch("family.member.Member.get_daughter")
+        member.get_relationship("daughter")
+        mock.assert_called_with()
+
+        mock = mocker.patch("family.member.Member.get_siblings")
+        member.get_relationship("siblings")
+        mock.assert_called_with()
+
+        
 
 
 

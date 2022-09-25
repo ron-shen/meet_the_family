@@ -16,6 +16,23 @@ class Member:
         self.spouse = None
         self.children = []
 
+    def get_relationship(self, relationship_type):
+        relationship_method_switch = {
+            'paternal_aunt': self.get_paternal_aunt,
+            'paternal_uncle': self.get_paternal_uncle,
+            'maternal_aunt': self.get_maternal_aunt,
+            'maternal_uncle': self.get_maternal_uncle,
+            'brother_in_law': self.get_brother_in_law,
+            'sister_in_law': self.get_sister_in_law,
+            'son': self.get_son,
+            'daughter': self.get_daughter,
+            'siblings': self.get_siblings
+        }
+        relationship_method = relationship_method_switch.get(relationship_type, None)
+        if not relationship_method:
+            raise ValueError("relationship_type is not found")      
+        return relationship_method()
+
     def set_mother(self, mother):
         if not isinstance(mother, Member):
             raise ValueError("mother must be a Member object")
@@ -148,19 +165,11 @@ class Member:
     def get_siblings(self):
         if not self.mother or not self.mother.children:
             return []
-
+        
         siblings = filter(lambda child: child != self, self.mother.children)
         return list(siblings)
 
     def __eq__(self, other) -> bool:
         if isinstance(self, other.__class__):
-            return (
-                self.id == other.id and 
-                self.name == other.name and
-                self.gender == other.gender and
-                self.mother == other.mother and
-                self.father == other.father and
-                self.spouse == other.spouse and 
-                self.children == other.children
-                )
+            return self.id == other.id             
         return False
