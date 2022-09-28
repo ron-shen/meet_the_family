@@ -1,10 +1,15 @@
 import pytest
 from family.member import Member
+from family.family_tree import FamilyTree
 
 @pytest.fixture(scope="class")
 def member():
     member = Member(1, "Tony", "Male")
     return member
+
+@pytest.fixture(scope="class")
+def family():
+    return FamilyTree()
 
 @pytest.fixture(scope="class")
 def member_integration(request):
