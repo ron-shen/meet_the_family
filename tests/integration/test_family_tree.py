@@ -26,7 +26,7 @@ class TestFamilyTree:
         assert family.family_tree.get("Zim", None) is not None
 
 
-    def test_add_spouse(self):
+    def add_spouse(self):
         pass
 
     def test_get_relationship(self):

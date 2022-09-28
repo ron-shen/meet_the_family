@@ -7,7 +7,7 @@ def member():
     member = Member(1, "Tony", "Male")
     return member
 
-@pytest.fixture(scope="class")
+@pytest.fixture()
 def family():
     return FamilyTree()
 
